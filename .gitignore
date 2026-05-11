@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Generated outputs (do not commit reviewer outputs that may contain anonymous-period content)
+outputs/
+*.docx
+!examples/**/*.docx
+
+# OS
+Thumbs.db
+desktop.ini

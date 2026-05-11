@@ -1,6 +1,6 @@
 ---
 name: paper-review
-description: "Academic paper reviewing skill for ML/AI conferences. Use this skill whenever the user asks to review, critique, or write referee reports for research papers — including when they upload a PDF and say 'review this', 'write a review', 'what are the weaknesses', 'help me referee', or mention reviewing for a conference (e.g. NeurIPS, ICML, ICLR, CVPR, ECCV, AAAI, ECML). Also trigger when the user wants to verify references in a review, improve critique quality, or develop a reviewing strategy for an assigned paper."
+description: "Academic paper reviewing skill for ML/AI conferences. Use this skill whenever the user asks to review, critique, or write referee reports for research papers — including when they upload a PDF and say 'review this', 'write a review', 'what are the weaknesses', 'help me referee', or mention reviewing for a conference (e.g. NeurIPS, ICML, ICLR, CVPR, ECCV, AAAI, ECML). Also trigger when the user wants to verify references in a review, improve critique quality, or develop a reviewing strategy for an assigned paper. 中文触发词: '审稿', '写审稿意见', '评审这篇论文', '审一下这篇', '帮我审', '挑毛病', '写 review', '写 referee report', '会议审稿', '同行评议'。"
 ---
 
 # Paper Review Skill

@@ -30,6 +30,30 @@ Why this works: It identifies exactly what variable is confounded, names the spe
 
 Why this works: It identifies the specific term being misused, explains what the system actually does, and proposes an honest alternative. No dashes, colons, or bullet points needed.
 
+## Example: Self-undermining ablation
+
+2. The headline mechanism is not supported by the paper's own ablation. The method is named after a multi-component update rule, but Table 4 shows that going from the open-loop baseline at the primary consistency metric value 0.639 to a single-component variant at 0.682 captures essentially all of the improvement. Adding the second term yields 0.676, which is actually worse than the single-component variant alone, and the full mechanism reaches 0.684, a gain of 0.002 over the simplest variant. The same pattern holds for the secondary metric, where the simplest variant achieves 61.361 and the full mechanism achieves 60.844, a 0.85 percent relative improvement. The headline contribution is therefore a sub-percent effect on top of what a one-term version already delivers. A more honest presentation would drop the multi-component branding or demote the additional terms to an optional appendix.
+
+Why this works: It walks through the ablation table row by row to show the headline mechanism contributes almost nothing, and proposes an honest renaming. The paper provides the evidence against itself, which is the strongest possible form of this argument.
+
+## Example: Framing mismatch with the actual driver of gains
+
+1. There is a mismatch between the paper's framing and the actual source of the gains. The title and abstract highlight one component as the central contribution, but the ablation in Table 2 tells a different story. The first ablation row uses an existing prompting strategy with the authors' redesigned detector and no headline component. It already reaches 96.4, 95.2, and 96.7 AUROC under the 1 shot, 2 shot, and 4 shot settings on MVTec AD. The full method reaches 96.7, 96.7, and 97.3. The headline component adds only 0.3, 1.5, and 0.6 points. The redesigned detector, not the highlighted component, appears to be the main driver of performance. The paper should reframe its contribution to match what the ablation actually shows.
+
+Why this works: It compares the ablation row without the headline component against the full method, computes the actual delta, and identifies what is really doing the work. Asking the paper to reframe rather than to add new experiments is a constructive resolution.
+
+## Example: Latency-matched baseline missing
+
+3. The paper does not run a latency matched baseline, and this is the single most important missing experiment. Each iteration of the proposed loop is a full denoising pass. The paper reports 20 iterations per image at 4.2 seconds each, which is roughly 84 seconds per image versus 4.2 seconds for the open-loop baseline, a 20 times cost multiplier. The obvious latency matched comparison is best of N re ranking using the same scoring network as the selection criterion, which also multiplies inference cost linearly and requires no change to the base model. For the identity task best of 20 with an ArcFace based ranker is a standard and strong baseline, and for the geometric tasks best of N with the same error metric as selection criterion is trivially implementable. Without this comparison the reader cannot distinguish whether the feedback loop is exploiting a real convergent dynamic or simply amortizing the same compute budget that best of N would spend equally effectively.
+
+Why this works: It quantifies the compute overhead (20x), names the obvious matched-compute alternative (best of N with the same scorer), gives concrete instantiations for each task, and explains why the comparison is necessary to interpret the gains.
+
+## Example: Standard mechanism overclaimed as a contribution
+
+5. The proposed weighting module is presented as a contribution but is a standard mechanism. Its computation consists of global average pooling of patch level similarity scores followed by temperature scaled softmax normalization and weighted summation. This is a standard attention mechanism that has been used extensively in multi modal retrieval and NLP. The ablation shows that replacing the module with mean averaging reduces F1 from 50.2 to 42.8, but this only demonstrates that non uniform weighting is better than uniform weighting, which is expected. The gap does not establish that the named module is a novel or non obvious design. Listing this standard computation as a distinct contribution overstates its significance.
+
+Why this works: It strips the module name to reveal what the computation actually is, identifies the prior art family it belongs to, and explains why the supporting ablation does not establish novelty.
+
 ## Example: Good strength
 
 2. The alternating optimization between the prompt refinement module and the learnable tokens is a reasonable design choice. By freezing one component while updating the other, the method avoids the instability of jointly optimizing a discrete text generator and continuous token embeddings. The training procedure is described clearly enough to support reproduction, and the algorithm box is helpful.

@@ -1,6 +1,6 @@
 # paper-review.skill
 
-> This skill produces **professional, evidence-based reviews for top-tier conferences**, with specific assessments of a paper's novelty, experimental results, and key conclusions.
+> This skill generates **professional, evidence-based peer reviews** and has evolved through long-term use and continual refinement by professional researchers.
 
 Use it with **Codex, Claude Code, and Gemini CLI**, or supply the instructions and materials to another AI assistant.
 

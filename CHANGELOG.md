@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Made the review workflow provider-neutral, with capability-based fallbacks for missing search, paper reading, file output, and Word export.
+- Added Codex and Gemini CLI installation guidance, optional Codex UI metadata, and a manual path for other assistants and API applications.
+- Corrected repository URLs and removed unsupported SDK examples and assumed Cowork filesystem paths.
+- Rewrote the Chinese and English introductions around practical self-review use cases and a fully synthetic example; replaced review-derived prose calibration with fictional examples.
+- Unified the default external-reference cap at four, removed weakness quotas and unsupported model-error statistics, and made current user/venue requirements take precedence.
+- Replaced fixed conference score tables with guidance to use the actual current rubric; added traceable verification notes and handling for unsupported citation-dependent claims.
+
 ## v0.3.0
 
 - **Removed all real-content examples from the `examples/` directory.** Previous releases incorrectly bundled frontier-knowledge documents that were generated during real reviewing batches. Even though those documents are paper-independent in content, the choice of subfield to map and competitors to flag is the reviewer's intellectual work and is tied to specific submissions under double-blind review. The `examples/` directory now ships empty with a README that explains it accepts only fully synthetic content.

@@ -1,6 +1,6 @@
 # Examples
 
-This directory is intentionally empty in the initial release. Real reviewing work is confidential and should never be checked into a public repository, even when it appears to consist only of "paper-independent" artifacts like frontier-knowledge documents — those documents are still tied to specific submissions under double-blind review, and the reviewer's analysis itself is intellectual work that the reviewer may not have consented to release.
+Start with [the synthetic ablation example](synthetic-ablation.md), a hand-written illustration of evidence-based criticism. Real reviewing work is confidential and should never be checked into a public repository, even when it appears to consist only of "paper-independent" artifacts like frontier-knowledge documents — those documents are still tied to specific submissions under double-blind review, and the reviewer's analysis itself is intellectual work that the reviewer may not have consented to release.
 
 ## What can go here
 

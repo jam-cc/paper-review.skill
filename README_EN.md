@@ -1,177 +1,121 @@
 # paper-review.skill
 
-> Distill "writing a rigorous, evidence-based, non-fluff conference review" into a reusable AI Skill.
+### Find the questions your paper needs to answer before you submit.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)](https://claude.ai/code)
-[![Cowork](https://img.shields.io/badge/Cowork-Ready-green)](https://claude.com)
+A reusable paper-review skill for **Codex, Claude Code, and Gemini CLI**, with a manual workflow for other AI assistants.
 
-Hand Claude an ML/AI conference paper PDF and get back a structured, evidence-grounded review — Summary, Strengths, Weaknesses, Questions, Suggestions, References. Weaknesses use the paper's own numbers. Questions are genuine clarifying questions, not directives. Every reference is web-search verified to avoid hallucinated authors and venues.
+Ask your assistant to check the contributions, experiments, and references, then write feedback you can act on: **which claim needs more evidence, which comparison is unfair, and what deserves your attention first.**
 
-Designed for NeurIPS / ICML / ICLR / CVPR / ECCV / AAAI / ACM MM / ECML PKDD style reviewing.
+[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent_Skills-portable-16803c.svg)](https://agentskills.io)
 
-[Install](#install) · [Usage](#usage) · [Design Principles](#design-principles) · [Detailed Install](INSTALL.md) · [**中文**](README.md)
+[Quick start](#quick-start) · [See an example](#what-useful-feedback-looks-like) · [Install guide](INSTALL.md) · [中文](README.md)
 
----
+## What useful feedback looks like
 
-## Why this skill exists
+“The experiments are insufficient” leaves you guessing. This skill asks the assistant to explain which conclusion the missing evidence affects.
 
-LLM-written reviews fall into a recurring set of failure modes:
+This **fictional, hand-written example** illustrates the intended style. It is not a measured model result:
 
-1. **Vague critiques without evidence.** "The experiments are insufficient" — but which experiment, missing what?
-2. **Novelty claims with no reference frame.** "This isn't novel" — but compared to which prior work, differing in what specific way?
-3. **Hallucinated citations.** In our experience, 60 to 80 percent of LLM-generated author lists for academic references contain errors. Venue swaps are also common (e.g. confusing FlexEdit with FlexiEdit).
-4. **Questions that are actually directives.** "To address Weakness 3, please run experiment X" gets jammed into the Questions section, crowding out the genuine clarifying questions a reviewer should raise.
-5. **References section bloat.** Re-listing works the paper already cites (StyleID, IP-Adapter, etc.) adds noise, not signal.
+> The paper attributes the accuracy gain to its new module, but Table 2 changes both the module and the training set size. The baseline uses 10,000 examples; the full method uses 20,000. This comparison cannot separate the architectural effect from the effect of additional data, so it does not yet support the claim that the module causes the improvement.
 
-This skill encodes a four-phase process (Frontier Knowledge → Innovation Analysis → Write Review → Prune & Verify References) plus a tight set of writing constraints (plain prose, no bullet points, ≤4 references, never duplicate the paper's own bibliography) to prevent these failure modes by construction.
+You now have a specific comparison to investigate. Read the [synthetic source material and analysis](examples/synthetic-ablation.md).
 
----
+## When to use it
 
-## Install
+- **Before submission:** Check contribution claims, baseline fairness, and ablations to plan your next revision.
+- **In a lab discussion:** Bring evidence from tables, equations, and experimental settings to the conversation.
+- **For rebuttal preparation:** Separate misunderstandings from missing evidence and claims that need narrowing.
+- **For assisted peer review:** Where the applicable review and confidentiality rules permit it, prepare a grounded draft for your own verification.
+
+The examples focus on empirical ML / AI / CV / NLP research. You can request English or Chinese output. The workflow also supports conceptual arguments, though it is not a specialist proof checker.
+
+## Quick start
+
+Choose one set of commands for your assistant. Git is required. If the destination already exists, inspect that installation first.
+
+### Codex
+
+```bash
+mkdir -p ~/.agents/skills
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.agents/skills/paper-review
+```
+
+Attach the paper or provide an accessible path, then ask:
+
+```text
+Use $paper-review to self-review papers/draft.pdf before submission.
+Check whether the experiments support the contributions and prioritize the concerns.
+```
 
 ### Claude Code
 
 ```bash
-# Install into the current project
-mkdir -p .claude/skills
-git clone https://github.com/jam-cc/paper-review-skill .claude/skills/paper-review
-
-# Or install globally (available across all projects)
-git clone https://github.com/jam-cc/paper-review-skill ~/.claude/skills/paper-review
+mkdir -p ~/.claude/skills
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.claude/skills/paper-review
 ```
 
-### Cowork (Claude Desktop)
+```text
+/paper-review Review papers/draft.pdf, focusing on baselines and ablations.
+```
+
+### Gemini CLI
 
 ```bash
-mkdir -p ~/Library/Application\ Support/Claude/skills
-git clone https://github.com/jam-cc/paper-review-skill \
-  ~/Library/Application\ Support/Claude/skills/paper-review
+mkdir -p ~/.gemini/skills
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.gemini/skills/paper-review
 ```
 
-### Anthropic Agent SDK / Claude API
-
-Load the entire `paper-review-skill/` directory as a skill, or read `SKILL.md` and concatenate its contents into your system prompt.
-
-See [INSTALL.md](INSTALL.md) for cross-platform paths and troubleshooting.
-
----
-
-## Usage
-
-Upload the paper's PDF to Claude and say:
-
-```
-Please review this NeurIPS submission
+```text
+Use the paper-review skill to review papers/draft.pdf.
 ```
 
-or
+Start a new session or refresh the skill list after installation. Paths follow the hosts' official documentation. See the [install guide](INSTALL.md) for project installs, Windows, Cowork, and manual integration.
 
-```
-Help me referee this MM26 paper
-```
+### Other assistants / APIs
 
-The skill triggers automatically and runs four phases:
+Provide [SKILL.md](SKILL.md), its relevant `references/` files, and the paper as accessible files or context. Ask the assistant to follow the workflow. An assistant that reads Markdown can use the instructions; automatic discovery, browsing, and export depend on its host. **No dedicated SDK or particular model is required.**
 
-1. **Phase 1 — Frontier Knowledge.** Web-search the relevant subfield from the last 2-3 years and write a `frontier_<subfield>.md` document as the comparison baseline, independent of the paper's own narrative.
-2. **Phase 2 — Innovation Analysis.** With the frontier map in hand, interrogate each claimed contribution: is it actually new, is it necessary, does the evidence support the claim, and are the ablations sufficient?
-3. **Phase 3 — Write Review.** Produce five sections in plain prose: Summary (2-4 factual sentences), Strengths, Weaknesses (each structured as "what the paper claims → what the data shows → what this means"), Questions (genuine clarifying questions for the authors), and Suggestions (holistic recommendations for the paper as a whole).
-4. **Phase 4 — Prune & Verify References.** Remove any citation that already appears in the paper's own bibliography. The remaining ≤4 references must each be web-search verified for authors, venue, year, and pages.
+## From paper to review
 
-Output: `review_<id>.txt` + `review_<id>.docx` + `frontier_<subfield>.md`.
+| Phase | What the assistant does | What you get |
+|---|---|---|
+| 1. Research the field | Find direct predecessors, competitors, and simpler baselines; record sources and comparison conditions | A concrete basis for discussing novelty |
+| 2. Check contributions | Examine novelty, complexity, claim support, and controlled ablations | Concerns tied to evidence |
+| 3. Write the review | Organize Summary, Strengths, Weaknesses, and Questions and Suggestions | A draft you can read and discuss |
+| 4. Prune and verify | Remove redundant citations and check the sources behind critical claims | Traceable references |
 
-### Reviewing multiple papers
+The default is connected prose with at most four necessary external references and no minimum quota. Your requested format, language, and review form take precedence. You can also request a focused check of references or a single contribution.
 
-```
-Review the two papers in the MM26 folder
-```
+## Outputs
 
-The skill iterates the four-phase process per paper.
+When file writing is available, the default destination is `outputs/` in your working project. You can choose another directory.
 
----
-
-## Design Principles
-
-### 1. A few deadly weaknesses beat a long list of surface complaints
-
-Each weakness must satisfy one of two conditions: it threatens the paper's core contribution, or it reveals a fundamental methodological gap. Otherwise it belongs in Questions or Suggestions. Keep to 3-7 weaknesses, ideally 4.
-
-### 2. Cite only works the paper missed and that anchor a weakness
-
-A review is not a paper. Its References section is not a re-listing of the paper's bibliography. Before adding any citation, check whether the cited work already appears in the paper's own reference list. If it does, do not even bracket-cite it inline — refer to it by name in prose ("StyleSSP already manipulates..."). Only works the paper does not cite are eligible for the review's References section, capped at four entries (ideally three).
-
-### 3. Questions are for the authors, not directives at them
-
-Questions are genuine ambiguities the reviewer encountered: "What value is X set to?", "Why does this measurement predict that property?", "Is this citation a mix-up?"  
-Suggestions are holistic recommendations for the paper as a whole, in priority order. Neither is a per-weakness fix list.
-
-### 4. Hard writing constraints
-
-Plain text only. No bold, no bullet points, no dashes or colons used for structure. Each weakness is a single continuous paragraph. Spell out "percent". Use "to" for ranges, not en-dashes.
-
-### 5. Verify every reference via web search
-
-Most LLM-generated reference metadata contains errors. Always cross-check authors, venue, year, and pages against WebSearch and DBLP before including a reference.
-
----
-
-## Project Structure
-
-This project follows the [AgentSkills](https://agentskills.io) standard — the entire repo is a skill directory:
-
-```
-paper-review-skill/
-├── SKILL.md                      # Skill entry point (frontmatter + four-phase process)
-├── README.md                     # Chinese README
-├── README_EN.md                  # This file
-├── INSTALL.md                    # Cross-platform install instructions
-├── LICENSE                       # MIT
-├── .gitignore
-├── references/                   # Reference docs loaded on demand by SKILL.md
-│   ├── review-examples.md        #   Calibration examples for review prose style
-│   ├── hallucination-patterns.md #   Documented LLM citation-hallucination patterns
-│   └── conference-formats.md     #   Per-venue review structure and scoring conventions
-├── examples/                     # (empty by default) accepts only fully synthetic examples, never real review artifacts
-└── docs/                         # Design documents
-    └── DESIGN.md
+```text
+outputs/
+├── review_<id>.txt             # Review text
+├── frontier_<subfield>.md      # Related work, evidence links, verification notes
+└── review_<id>.docx            # On request, when Word export is available
 ```
 
----
+Without file tools, the assistant returns the review and source notes in chat. Without browsing or supplied external literature, it can still assess internal evidence, but must state the limits on novelty and literature coverage.
 
-## Scope and Limits
+## What the workflow asks for
 
-**Good fit for**
+**Evidence behind criticism.** Numbers point to tables; conceptual concerns point to assumptions or arguments. An explanation that is missing is different from a result that is wrong.
 
-- Reviewing for ML / AI / CV / NLP / DM venues (NeurIPS, ICML, ICLR, CVPR, ECCV, AAAI, ACM MM, ECML PKDD, etc.)
-- Journal reviewing (IEEE TPAMI, IJCV, TKDE, etc.)
-- Self-review / red-teaming your own paper before submission
-- Rebuttal preparation by pre-empting likely AC questions
+**Fairness without a weakness quota.** Report the concerns the evidence supports, and credit careful experiments and useful contributions.
 
-**Currently not a great fit**
+**Reference checks based on sources.** Unverified references stay out of the final bibliography. Claims that depend on them must be removed or qualified too. These checks can reduce errors; they cannot guarantee an error-free model.
 
-- Pure-theory math papers (lack of experimental data; frontier knowledge needs deeper domain grounding)
-- Non-English papers (verification infrastructure assumes English titles)
-- Very small subfields (web search hit rate for frontier knowledge is low)
+**A workflow you can move between assistants.** Instructions name capabilities instead of hard-coded tool APIs. Installation guidance follows official host documentation; end-to-end testing across all hosts is still outstanding.
 
----
+## Inside the repository
 
-## Contributing
+Start with [SKILL.md](SKILL.md). Supporting files cover [runtime adaptation](references/runtime-compatibility.md), [review prose](references/review-examples.md), [reference verification](references/hallucination-patterns.md), and [review formats](references/conference-formats.md). [Design notes](docs/DESIGN.md) explain the choices.
 
-PRs welcome. Especially valued directions:
+Contributions are welcome, especially reproducible compatibility reports and **fully synthetic** review examples. Do not submit real manuscripts, reviewing artifacts, or anonymized versions. See [examples/README.md](examples/README.md).
 
-- `references/conference-norms.md`: per-conference review-length, scoring rubric, and confidence conventions
-- `references/subfield-priors.md`: per-subfield "high-complexity method vs simple baseline" cheat sheets to bootstrap Phase 1 faster
-- `examples/`: anonymized real review samples for style calibration
-- Multilingual outputs: enable Chinese-language reviews for some domestic venues
+If this helps you catch a problem before submission, consider starring the project. Feedback about a rule that helped, or one that got in the way, is welcome too.
 
-When submitting PRs, preserve the core constraints in SKILL.md (four phases, ≤4 references, plain prose). Extensions go through new `references/*.md` files rather than rewriting the SKILL.md body.
-
----
-
-## Acknowledgments
-
-Inspired by Anthropic Skills team's [skill-creator](https://github.com/anthropics/skills) template and the "the entire repo is a skill" project layout from [titanwings/colleague-skill](https://github.com/titanwings/colleague-skill). The reference-hallucination patterns are based on cases observed during real ECML PKDD 2026 reviewing.
-
----
-
-MIT License © 2026
+Inspired by the skill layout in [Anthropic Skills](https://github.com/anthropics/skills) and [colleague-skill](https://github.com/titanwings/colleague-skill). MIT License; see [LICENSE](LICENSE).

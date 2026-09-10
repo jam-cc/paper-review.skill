@@ -1,182 +1,131 @@
-# Install Guide
+# Install paper-review
 
-This skill is a single directory. Drop it into the right path on your platform and it will be picked up automatically.
+[中文首页](README.md) · [English overview](README_EN.md)
 
-## Quick reference
+The repository is the skill directory: `SKILL.md` at its root, with supporting files under `references/`. Clone it into a directory named `paper-review` to match the skill name. No package build, provider SDK, or API key is required by this repository. Your assistant may have its own subscription, model, and tool requirements.
 
-| Platform | Skill directory |
-|---|---|
-| Claude Code (project-local) | `<repo-root>/.claude/skills/paper-review/` |
-| Claude Code (user-global) | `~/.claude/skills/paper-review/` |
-| Cowork / Claude Desktop (macOS) | `~/Library/Application Support/Claude/skills/paper-review/` |
-| Cowork / Claude Desktop (Windows) | `%APPDATA%\Claude\skills\paper-review\` |
-| Cowork / Claude Desktop (Linux) | `~/.config/Claude/skills/paper-review/` |
-| OpenClaw | `~/.openclaw/workspace/skills/paper-review/` |
-| Anthropic Agent SDK | Pass the directory path to the SDK's skill loader, or read `SKILL.md` into the system prompt |
+## Choose your host
 
-The skill folder must be named `paper-review` (matching the `name` field in `SKILL.md` frontmatter). Renaming the folder breaks the slash-command and triggering behavior.
+| Host | User installation | Project installation | Invoke |
+|---|---|---|---|
+| Codex | `~/.agents/skills/paper-review/` | `.agents/skills/paper-review/` | `$paper-review` |
+| Claude Code | `~/.claude/skills/paper-review/` | `.claude/skills/paper-review/` | `/paper-review` |
+| Gemini CLI | `~/.gemini/skills/paper-review/` | `.gemini/skills/paper-review/` | Ask to use the `paper-review` skill |
+| Other Agent Skills hosts | Use the host's documented skill directory | Host-specific | Use its skill selector or an explicit request |
+| Chat / custom API agent | Supply the instructions and references as files or context | No automatic installation | Ask to follow the supplied skill |
 
----
+Paths are documented in [Codex skills](https://developers.openai.com/codex/skills/), [Claude Code skills](https://code.claude.com/docs/en/skills), and [Gemini CLI skills](https://geminicli.com/docs/cli/skills/). Gemini CLI also recognizes `.agents/skills` at user and workspace scope, so a shared Codex installation may already be discoverable there. Avoid duplicate installations unless you intend to maintain separate versions.
 
-## Claude Code
+These are documented integration paths, not a claim of end-to-end testing on every product or version. Core packaging follows the [Agent Skills specification](https://agentskills.io/specification). `agents/openai.yaml` adds optional Codex display metadata; other hosts can use `SKILL.md` without it.
 
-### Option A: install into the current project
+## macOS / Linux
+
+Run only the block for your chosen host. Existing destinations are not overwritten by `git clone`.
+
+### Codex
 
 ```bash
-cd /path/to/your/project
-mkdir -p .claude/skills
-git clone https://github.com/<your-name>/paper-review-skill .claude/skills/paper-review
+mkdir -p ~/.agents/skills
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.agents/skills/paper-review
 ```
 
-The skill is now available only when Claude Code is invoked inside this project. This is the recommended option if you only review papers in one workspace, or if you want different review styles per project (for example a strict mode for top venues and a lighter mode for workshops).
+For one project, run from that project's root:
 
-### Option B: install globally for all projects
+```bash
+mkdir -p .agents/skills
+git clone https://github.com/jam-cc/paper-review.skill.git .agents/skills/paper-review
+```
+
+### Claude Code
 
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/<your-name>/paper-review-skill ~/.claude/skills/paper-review
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.claude/skills/paper-review
 ```
 
-The skill is then loaded in every Claude Code session.
+For one project, use `.claude/skills/paper-review` as the destination instead.
 
-### Verify
-
-In Claude Code, type `/help` and confirm `paper-review` is in the available-skills list. Or just upload a paper PDF and say "review this," and the skill should trigger automatically.
-
----
-
-## Cowork (Claude Desktop)
-
-### macOS
+### Gemini CLI
 
 ```bash
-mkdir -p ~/Library/Application\ Support/Claude/skills
-git clone https://github.com/<your-name>/paper-review-skill \
-  ~/Library/Application\ Support/Claude/skills/paper-review
+mkdir -p ~/.gemini/skills
+git clone https://github.com/jam-cc/paper-review.skill.git ~/.gemini/skills/paper-review
 ```
 
-### Windows (PowerShell)
+For one project, use `.gemini/skills/paper-review` as the destination instead. Refresh with `/skills reload` and inspect `/skills list`.
+
+## Windows / PowerShell
+
+For Codex:
 
 ```powershell
-$dest = "$env:APPDATA\Claude\skills\paper-review"
-New-Item -ItemType Directory -Force -Path "$env:APPDATA\Claude\skills" | Out-Null
-git clone https://github.com/<your-name>/paper-review-skill $dest
+$skillRoot = Join-Path $HOME '.agents/skills'
+New-Item -ItemType Directory -Force -Path $skillRoot | Out-Null
+git clone https://github.com/jam-cc/paper-review.skill.git (Join-Path $skillRoot 'paper-review')
 ```
 
-### Linux
+For Claude Code, change `.agents/skills` to `.claude/skills`; for Gemini CLI, use `.gemini/skills`. For a project install, use the project directory instead of `$HOME`. If your CLI runs inside WSL, install into the WSL filesystem with the Linux commands.
+
+## Check the installation
+
+Start a new session or reload skills using your host's controls. Select `paper-review` explicitly and provide a readable paper path. For a smoke check, the bundled example can serve as source material:
+
+```text
+Use paper-review to critique the Source material section of
+/path/to/paper-review/examples/synthetic-ablation.md.
+Limit the review to the supplied evidence; do not search for the fictional paper.
+Return the review in chat.
+```
+
+Check observable behavior: the assistant distinguishes extra data from the module effect, does not claim that it searched, and does not invent references. The example also contains an illustrative answer, so this is a loading check, not an independent evaluation of model quality.
+
+## Claude Desktop / Cowork
+
+Cowork uses skills enabled for your Claude account, rather than an assumed OS-specific `Claude/skills` folder. Follow the current [Cowork skill instructions](https://code.claude.com/docs/en/skills#use-skills-in-cowork-and-cloud-sessions) to enable a custom skill. If the interface requests a ZIP, create one from this checkout:
 
 ```bash
-mkdir -p ~/.config/Claude/skills
-git clone https://github.com/<your-name>/paper-review-skill ~/.config/Claude/skills/paper-review
+git archive --format=zip --prefix=paper-review/ --output=../paper-review.zip HEAD
 ```
 
-After cloning, restart Claude Desktop so the skill list refreshes.
+This packages committed files only. Keep `SKILL.md` and `references/` together. Where custom skills are unavailable, use the manual workflow below.
 
----
+## Other assistants and API applications
 
-## OpenClaw
+1. Supply `SKILL.md` as instructions or a readable attachment.
+2. Make the referenced Markdown files accessible through attachments, retrieval, or filesystem tools. Pasting only `SKILL.md` does not supply those files.
+3. Supply the paper as task data, then ask the assistant to follow the workflow. Use your SDK's actual instruction and tool interfaces; this repository ships no SDK-specific loader.
+
+For example:
+
+```text
+Follow the attached paper-review SKILL.md to review the attached draft.
+Use the supplied reference guidance where relevant. Write in English.
+If you cannot access external sources, limit novelty claims to the supplied
+literature and state the limitation. Return text in this chat.
+```
+
+Browsing, PDF interpretation, reference retrieval, and export remain the host's responsibility. See [runtime compatibility](references/runtime-compatibility.md) for supported fallbacks.
+
+## Update or remove
+
+In the installation you want to update:
 
 ```bash
-mkdir -p ~/.openclaw/workspace/skills
-git clone https://github.com/<your-name>/paper-review-skill ~/.openclaw/workspace/skills/paper-review
+git -C /path/to/paper-review pull --ff-only
 ```
 
----
+If Git reports local changes or divergent history, inspect them before merging; do not reset local edits just to update the skill. Then refresh the host's skill list.
 
-## Anthropic Agent SDK
+To uninstall, remove the exact `paper-review` directory you installed, or use your host's skill manager. Keep any reviews stored elsewhere.
 
-If you build your own agent on top of the Claude API + Agent SDK, two integration patterns work:
+## Troubleshooting
 
-### Pattern 1: SDK-managed skills
+**Skill not found:** Check that the host can access the installation and that `SKILL.md` is directly inside `paper-review/`. Reload or restart, then invoke it explicitly. Plain chat interfaces need the files supplied in context; they do not discover your local clone.
 
-```python
-from anthropic_agent import Agent
+**Reference files not found:** Keep the directory structure intact. Resolve `references/` relative to the installed `SKILL.md`, not the current paper directory.
 
-agent = Agent(
-    model="claude-sonnet-4-6",
-    skill_dirs=["/path/to/paper-review-skill"],
-)
-```
+**No web access:** Enable a supported search tool if you want current literature research. Otherwise the assistant should report a review limited to available sources and avoid unsupported novelty conclusions.
 
-### Pattern 2: inline system prompt
+**No PDF or Word tool:** Supply extracted text for the review, noting any missing tables or figures. Word export is optional; a text review should still be delivered.
 
-If your stack does not yet support skill auto-loading, read `SKILL.md` and prepend it to your system prompt:
-
-```python
-import pathlib
-
-skill_md = pathlib.Path("paper-review-skill/SKILL.md").read_text()
-system_prompt = f"""{your_existing_system_prompt}
-
-# Embedded skill: paper-review
-
-{skill_md}
-"""
-```
-
-`SKILL.md` references files under `references/` by relative path; if you go the inline route, also expose those files via the agent's filesystem so the skill body can `Read` them when it instructs to.
-
----
-
-## Updating
-
-```bash
-cd /path/to/installed/paper-review
-git pull
-```
-
-Cowork users may need to restart Claude Desktop after pulling.
-
----
-
-## Uninstalling
-
-Just delete the skill directory:
-
-```bash
-rm -rf <wherever-you-installed>/paper-review
-```
-
----
-
-## Common issues
-
-**Skill does not trigger when I upload a PDF.**  
-Check that the directory is named exactly `paper-review` and that `SKILL.md` is at its root (not nested one level deeper). The triggering key is the `description` field in the SKILL.md frontmatter; if you renamed or modified it, mention "review this paper" or "write a referee report" explicitly to force the trigger.
-
-**Web search returns no results during Phase 1 / Phase 4.**  
-Frontier-knowledge research and reference verification both depend on web access. In Claude Code, ensure WebSearch is enabled in settings. In Cowork, the Network category in capability settings must allow general web search. If your network blocks search APIs, the skill will fall back to less-verified output, which is a quality loss.
-
-**Output review's References section keeps re-listing works the paper already cites.**  
-This is a model adherence issue. The Phase 4 Prune step in `SKILL.md` explicitly forbids it. If it still happens, prepend a short reminder to your prompt: "Apply the Prune step strictly: do not list works that already appear in the paper's bibliography."
-
-**Reviews end up with bullet points or markdown headers.**  
-SKILL.md hard-bans these in the writing-style section. If they appear, the model is overriding skill instructions; restate "plain prose only, no bullets, no headers" in the user message.
-
----
-
-## Optional: reproduce the example outputs
-
-The `examples/` directory contains a fully worked example (frontier doc + two reviews) for an ACM MM 2026 reviewing batch on diffusion-based style transfer. To regenerate them:
-
-```bash
-# Place the two PDFs in a folder, then ask Claude:
-# "Review the two papers in this folder using the paper-review skill"
-```
-
-The expected output structure is:
-
-```
-outputs/
-├── frontier_diffusion_style_transfer.md
-├── review_1918.txt
-├── review_1918.docx
-├── review_4910.txt
-└── review_4910.docx
-```
-
----
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+**Wrong format or language:** Specify the desired language and attach the venue's current review form. Those instructions take precedence over the default prose template.

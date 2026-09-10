@@ -1,51 +1,28 @@
-# Reference Hallucination Patterns
+# Reference verification
 
-This document catalogs common LLM hallucination patterns in academic references, based on real cases encountered during ECML PKDD 2026 reviewing.
+Read during Phase 4. Fluent reference text is not proof that a paper exists or supports a claim. This checklist describes failure modes to check; it does not assert a measured error rate for any model.
 
-## Most Common: Wrong Author Lists
+## Identity errors
 
-The most frequent hallucination type. The paper title and venue are correct, but authors are partially or completely fabricated.
+A plausible title can be paired with a wrong author list, a similar paper can be mistaken for the intended one, or a title can be fabricated. Search the exact title, then inspect the original paper or an authoritative publication record. Check the full author list when using a full-author citation style.
 
-**Real case:** VisualAD paper
-- Hallucinated authors: "Xinwei Liu, Yuwei Zhao, Hao Chen, Zhaoxiang Zhang, and Xiaogang Wang"
-- Real authors: "Yanning Hou, Peiyuan Li, Zirui Liu, Yitong Wang, Yanran Ruan, Jianfeng Qiu, and Ke Xu"
-- Every single author was wrong.
+## Publication errors
 
-**Real case:** MuSc paper
-- Hallucinated: had wrong co-authors mixed in
-- Pattern: first author was correct, but remaining authors were fabricated
+Preprints and published versions can differ in title, year, author list, and pagination. Confirm which version you read. Label an arXiv paper as a preprint unless its publication is verified. Do not fill missing pages or a DOI from memory.
 
-## Second Most Common: Wrong Venue
+## Support errors
 
-The paper exists but is attributed to the wrong conference.
+A real citation can still fail to support the criticism. Read the relevant method or experiment, check its assumptions and evaluation protocol, and record where the supporting evidence appears. Similar names or benchmark labels do not establish an equivalent contribution.
 
-**Real case:** FAPrompt
-- Hallucinated venue: CVPR 2025
-- Real venue: ICCV 2025
-- Pattern: plausible venue substitution (both are top CV conferences)
+## Verification record
 
-## Third: Wrong Year
+For each surviving reference, keep a compact entry in the frontier notes:
 
-Off by one year is the most common pattern.
+- Confirmed title, authors, publication status, venue and year where applicable.
+- Primary-source URL or stable identifier; date accessed for live sources.
+- The section or result that supports the review's claim.
+- Any version differences, unavailable fields, or unresolved ambiguity.
 
-## Fourth: Entirely Fabricated Papers
+Use official proceedings, publisher pages, or the original paper as primary evidence. DBLP and scholarly indexes can help resolve identity and metadata. Search snippets alone are insufficient for validating a technical claim.
 
-The paper title sounds plausible but doesn't exist at all. This is rarer but more dangerous because there's nothing to partially match against.
-
-## Verification Checklist
-
-For each reference:
-1. Search `"exact title"` — does the paper exist?
-2. Check author list against DBLP or the paper's own PDF
-3. Verify venue name and year
-4. If the paper is from arXiv, note the arXiv ID for easy verification
-
-## Statistics from Our Experience
-
-In a batch of 4 reviews with ~20 total references:
-- ~65% of LLM-generated author lists contained errors
-- ~15% had venue errors
-- ~5% were entirely fabricated
-- Only ~30% were fully correct as generated
-
-The takeaway: **always verify, never trust LLM-generated references.**
+If source access fails, record the lead as unverified in the notes and omit it from the final references. Remove or qualify any critique that depended on it. Verification based on supplied authoritative records is acceptable; distinguish it from a live literature search and do not claim current coverage.

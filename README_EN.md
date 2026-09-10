@@ -1,10 +1,10 @@
 # paper-review.skill
 
-### Find the questions your paper needs to answer before you submit.
+This skill helps AI assistants review research papers, examine novelty, experiments, and references, and suggest specific revisions.
 
-A reusable paper-review skill for **Codex, Claude Code, and Gemini CLI**, with a manual workflow for other AI assistants.
+Use it with **Codex, Claude Code, and Gemini CLI**, or supply the instructions and materials to another AI assistant.
 
-Ask your assistant to check the contributions, experiments, and references, then write feedback you can act on: **which claim needs more evidence, which comparison is unfair, and what deserves your attention first.**
+Use it to check your own paper before submission or help draft a referee report: **which claim needs more evidence, which comparison is unfair, and what deserves your attention first.**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent_Skills-portable-16803c.svg)](https://agentskills.io)

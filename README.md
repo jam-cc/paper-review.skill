@@ -1,10 +1,10 @@
 # paper-review.skill
 
-### 投稿前，先找出论文里最容易被追问的地方。
+这个 skill 帮助 AI 助手审阅学术论文，检查创新点、实验和引用，并给出具体的修改建议。
 
-一个可复用的 AI 审稿 skill，适用于 **Codex、Claude Code、Gemini CLI**，也可以把指令和材料交给其他 AI 助手使用。
+适用于 **Codex、Claude Code、Gemini CLI**，也可以把指令和材料交给其他 AI 助手使用。
 
-让助手沿着论文的贡献、实验和引用逐项核对，写出你能据此修改论文的意见：**哪项主张证据不足，哪个对比不公平，哪些问题值得优先解决。**
+你可以用它在投稿前自审，或辅助撰写审稿意见，重点找出：**哪项主张证据不足，哪个对比不公平，哪些问题值得优先解决。**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent_Skills-portable-16803c.svg)](https://agentskills.io)

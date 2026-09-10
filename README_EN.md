@@ -35,17 +35,17 @@ This skill encodes a four-phase process (Frontier Knowledge → Innovation Analy
 ```bash
 # Install into the current project
 mkdir -p .claude/skills
-git clone https://github.com/<your-name>/paper-review-skill .claude/skills/paper-review
+git clone https://github.com/jam-cc/paper-review-skill .claude/skills/paper-review
 
 # Or install globally (available across all projects)
-git clone https://github.com/<your-name>/paper-review-skill ~/.claude/skills/paper-review
+git clone https://github.com/jam-cc/paper-review-skill ~/.claude/skills/paper-review
 ```
 
 ### Cowork (Claude Desktop)
 
 ```bash
 mkdir -p ~/Library/Application\ Support/Claude/skills
-git clone https://github.com/<your-name>/paper-review-skill \
+git clone https://github.com/jam-cc/paper-review-skill \
   ~/Library/Application\ Support/Claude/skills/paper-review
 ```
 

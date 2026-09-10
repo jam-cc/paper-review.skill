@@ -35,10 +35,10 @@ LLM 写审稿有几个反复出现的坑：
 ```bash
 # 安装到当前项目
 mkdir -p .claude/skills
-git clone https://github.com/<your-name>/paper-review-skill .claude/skills/paper-review
+git clone https://github.com/jam-cc/paper-review-skill .claude/skills/paper-review
 
 # 或安装到全局（所有项目都能用）
-git clone https://github.com/<your-name>/paper-review-skill ~/.claude/skills/paper-review
+git clone https://github.com/jam-cc/paper-review-skill ~/.claude/skills/paper-review
 ```
 
 ### Cowork (Claude Desktop)
@@ -46,7 +46,7 @@ git clone https://github.com/<your-name>/paper-review-skill ~/.claude/skills/pap
 ```bash
 # 全局安装
 mkdir -p ~/Library/Application\ Support/Claude/skills
-git clone https://github.com/<your-name>/paper-review-skill \
+git clone https://github.com/jam-cc/paper-review-skill \
   ~/Library/Application\ Support/Claude/skills/paper-review
 ```
 

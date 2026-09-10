@@ -1,6 +1,6 @@
 # paper-review.skill
 
-This skill helps AI assistants review research papers, examine novelty, experiments, and references, and suggest specific revisions.
+This skill produces professional, evidence-based reviews for top-tier conferences, with specific assessments of a paper's novelty, experimental results, and key conclusions.
 
 Use it with **Codex, Claude Code, and Gemini CLI**, or supply the instructions and materials to another AI assistant.
 
